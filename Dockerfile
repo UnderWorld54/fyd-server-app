@@ -8,9 +8,7 @@ RUN npm install
 
 COPY . .
 
-# Rendre le script exécutable
-RUN chmod +x docker-entrypoint.sh
-
 EXPOSE 3000
 
-CMD ["./docker-entrypoint.sh"] 
+# Script de démarrage qui exécute les seeds puis lance l'application
+CMD sh -c "npm run seed:all && npm run dev" 

@@ -36,9 +36,11 @@ class App {
     this.app.use(helmet());
     this.app.use(cors());
     this.app.use(morgan('combined'));
+
+    /*
     this.app.use(rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // 100 requêtes par IP
+      max: 500, // 100 requêtes par IP
       standardHeaders: true,
       legacyHeaders: false,
       message: {
@@ -46,6 +48,8 @@ class App {
         error: 'Too many requests, please try again later.'
       }
     }));
+    */
+
     this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true }));
   }

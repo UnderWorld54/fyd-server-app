@@ -4,9 +4,9 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'ModArt API Documentation',
+      title: 'FYD API Documentation',
       version: '1.0.0',
-      description: 'API documentation for ModArt application',
+      description: 'API documentation for FYD application',
     },
     servers: [
       {

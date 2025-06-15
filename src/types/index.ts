@@ -6,9 +6,11 @@ export interface IUser {
   email: string;
   password?: string;
   age?: number;
+  city: string;
   role?: 'user' | 'admin';
   isActive?: boolean;
   refreshToken?: string | null;
+  interests?: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -45,6 +47,8 @@ export interface RegisterRequest {
   email: string;
   password: string;
   age?: number;
+  city: string;
+  interests: string[];
 }
 
 export interface JwtPayload {

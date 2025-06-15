@@ -28,6 +28,11 @@ const UserSchema: Schema = new Schema(
       min: [0, 'Age must be positive'],
       max: [120, 'Age must be realistic']
     },
+    city: {
+      type: String,
+      required: [true, 'City is required'],
+      trim: true
+    },
     role: {
       type: String,
       enum: ['user', 'admin'],
@@ -41,19 +46,10 @@ const UserSchema: Schema = new Schema(
       type: String,
       default: null
     },
-    socials: [
-      {
-        platform: {
-          type: String,
-          enum: ['instagram', 'facebook', 'linkedin', 'twitter', 'tiktok'],
-          required: true
-        },
-        url: {
-          type: String,
-          required: true
-        }
-      }
-    ]
+    interests: {
+      type: [String],
+      default: []
+    }
   },
   {
     timestamps: true

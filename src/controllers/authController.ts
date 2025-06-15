@@ -209,12 +209,8 @@ export const registerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   age: Joi.number().min(0).max(120).optional(),
-  socials: Joi.array().items(
-    Joi.object({
-      platform: Joi.string().valid('instagram', 'facebook', 'linkedin', 'twitter', 'tiktok').required(),
-      url: Joi.string().uri().required()
-    })
-  ).optional()
+  city: Joi.string().required(),
+  interests: Joi.array().items(Joi.string()).required()
 });
 
 export const loginSchema = Joi.object({

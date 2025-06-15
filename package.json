@@ -10,8 +10,7 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "seed:users": "ts-node src/seeds/users.ts",
-    "seed:events": "ts-node src/seeds/events.ts",
-    "seed:all": "npm run seed:users && npm run seed:events"
+    "seed:all": "npm run seed:users"
   },
   "keywords": [],
   "author": "",

@@ -15,8 +15,7 @@ export class UserService {
     try {
       return await User.find({})
         .sort({ createdAt: -1 })
-        .populate('socials')
-        .populate({ path: 'projects', model: 'Project' });
+        .populate('interests');
     } catch (error) {
       throw new Error(`Error fetching users: ${error}`);
     }
@@ -25,8 +24,7 @@ export class UserService {
   async getUserById(id: string): Promise<IUserDocument | null> {
     try {
       return await User.findById(id)
-        .populate('socials')
-        .populate({ path: 'projects', model: 'Project' });
+        .populate('interests');
     } catch (error) {
       throw new Error(`Error fetching user: ${error}`);
     }
