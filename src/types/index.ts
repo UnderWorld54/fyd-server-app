@@ -57,6 +57,25 @@ export interface JwtPayload {
   role: string;
 }
 
+export interface EventResponse {
+  id: string;
+  name: string;
+  date: string;
+  place?: Array<{
+    address?: { line1?: string };
+    postalCode?: string;
+    city?: { name?: string };
+    country?: { name?: string };
+    upcomingEvents?: { _total?: number };
+    images?: Array<{ url?: string }>;
+  }>;
+  priceRanges?: Array<{
+    min?: number;
+    max?: number;
+  }>;
+  ticket?: string;
+}
+
 declare global {
   namespace Express {
     interface Request {
