@@ -13,7 +13,8 @@ const users = [
     age: 30,
     role: 'admin',
     isActive: true,
-    interests: ['Dance', 'Sport']
+    interests: ['Dance', 'Sport'],
+    city: 'Reims'
   },
   {
     name: 'John Doe',
@@ -22,7 +23,8 @@ const users = [
     age: 25,
     role: 'user',
     isActive: true,
-    interests: ['Dance', 'Sport']
+    interests: ['Dance', 'Sport'],
+    city: 'Paris'
   },
   {
     name: 'Jane Smith',
@@ -31,7 +33,8 @@ const users = [
     age: 28,
     role: 'user',
     isActive: true,
-    interests: ['Dance', 'Sport']
+    interests: ['Dance', 'Sport'],
+    city: 'Paris'
   }
 ];
 
