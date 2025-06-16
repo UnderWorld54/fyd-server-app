@@ -14,7 +14,7 @@ const users = [
     role: 'admin',
     isActive: true,
     interests: ['Dance', 'Sport'],
-    city: 'Reims'
+    city: 'Paris'
   },
   {
     name: 'John Doe',

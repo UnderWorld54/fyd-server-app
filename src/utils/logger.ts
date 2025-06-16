@@ -8,7 +8,7 @@ export const logger = createLogger({
     format.splat(),
     format.json()
   ),
-  defaultMeta: { service: 'modart-api' },
+  defaultMeta: { service: 'fyd-api' },
   transports: [
     new transports.Console({
       format: format.combine(
