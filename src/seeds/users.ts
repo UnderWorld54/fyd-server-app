@@ -41,7 +41,7 @@ const users = [
 const seedUsers = async () => {
   try {
     // Connexion à MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/modart');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fyd');
     console.log('Connected to MongoDB');
 
     // Suppression des utilisateurs existants
