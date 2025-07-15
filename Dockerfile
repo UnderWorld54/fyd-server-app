@@ -1,5 +1,5 @@
-# Utiliser Node.js 18 Alpine pour une image plus légère
-FROM node:18-alpine
+# Utiliser Node.js 20 Alpine pour une image plus légère
+FROM node:20-alpine
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -15,6 +15,9 @@ COPY . .
 
 # Compiler le TypeScript
 RUN npm run build
+
+# Rendre le script d'entrée exécutable
+RUN chmod +x docker-entrypoint.sh
 
 # Supprimer les devDependencies pour réduire la taille de l'image
 RUN npm prune --production
@@ -33,5 +36,5 @@ EXPOSE 3000
 # Variable d'environnement pour le port
 ENV PORT=3000
 
-# Script de démarrage qui exécute les seeds puis lance l'application
-CMD sh -c "npm run seed:all && npm start" 
+# Utiliser le script d'entrée
+ENTRYPOINT ["./docker-entrypoint.sh"] 
