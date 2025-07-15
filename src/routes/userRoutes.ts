@@ -3,9 +3,19 @@ import { UserController } from '../controllers/userController';
 import { authenticate, authorize } from '../middleware/auth';
 import { registerSchema } from '../controllers/authController';
 import { validateBody } from '../middleware/validate';
+import Joi from 'joi';
 
 const router = Router();
 const userController = new UserController();
+
+// Schéma de validation pour sauvegarder un événement
+const saveEventSchema = Joi.object({
+  eventId: Joi.string().required(),
+  name: Joi.string().required(),
+  date: Joi.string().required(),
+  location: Joi.string().required(),
+  imageUrl: Joi.string().optional()
+});
 
 /**
  * @swagger
@@ -28,6 +38,45 @@ const userController = new UserController();
  *           type: string
  *           enum: [user, admin]
  *           description: Rôle de l'utilisateur
+ *     SaveEventRequest:
+ *       type: object
+ *       required:
+ *         - eventId
+ *         - name
+ *         - date
+ *         - location
+ *       properties:
+ *         eventId:
+ *           type: string
+ *           description: ID unique de l'événement
+ *         name:
+ *           type: string
+ *           description: Nom de l'événement
+ *         date:
+ *           type: string
+ *           description: Date de l'événement
+ *         location:
+ *           type: string
+ *           description: Lieu de l'événement
+ *         imageUrl:
+ *           type: string
+ *           description: URL de l'image de l'événement (optionnel)
+ *     SavedEvent:
+ *       type: object
+ *       properties:
+ *         eventId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         date:
+ *           type: string
+ *         location:
+ *           type: string
+ *         imageUrl:
+ *           type: string
+ *         savedAt:
+ *           type: string
+ *           format: date-time
  */
 
 
@@ -135,9 +184,153 @@ router.get('/', authorize('admin'), userController.getAllUsers);
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.get('/:id', userController.getUserById);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', authorize('admin'), userController.deleteUser);
+// Routes pour les événements sauvegardés
+/**
+ * @swagger
+ * /api/users/saved-events:
+ *   get:
+ *     summary: Récupérer tous les événements sauvegardés de l'utilisateur connecté
+ *     tags: [Saved Events]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste des événements sauvegardés récupérée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     savedEvents:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/SavedEvent'
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: Non authentifié
+ *       404:
+ *         description: Utilisateur non trouvé
+ *   post:
+ *     summary: Sauvegarder un événement pour l'utilisateur connecté
+ *     tags: [Saved Events]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SaveEventRequest'
+ *     responses:
+ *       200:
+ *         description: Événement sauvegardé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     savedEvents:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/SavedEvent'
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Données invalides ou événement déjà sauvegardé
+ *       401:
+ *         description: Non authentifié
+ */
+router.get('/saved-events', userController.getSavedEvents);
+router.post('/saved-events', validateBody(saveEventSchema), userController.saveEvent);
+
+/**
+ * @swagger
+ * /api/users/saved-events/{eventId}:
+ *   delete:
+ *     summary: Supprimer un événement des favoris de l'utilisateur connecté
+ *     tags: [Saved Events]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de l'événement à supprimer
+ *     responses:
+ *       200:
+ *         description: Événement supprimé des favoris avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     savedEvents:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/SavedEvent'
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: Non authentifié
+ *       404:
+ *         description: Utilisateur non trouvé
+ */
+router.delete('/saved-events/:eventId', userController.removeSavedEvent);
+
+/**
+ * @swagger
+ * /api/users/saved-events/{eventId}/check:
+ *   get:
+ *     summary: Vérifier si un événement est sauvegardé par l'utilisateur connecté
+ *     tags: [Saved Events]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de l'événement à vérifier
+ *     responses:
+ *       200:
+ *         description: Statut de sauvegarde de l'événement
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     isSaved:
+ *                       type: boolean
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: Non authentifié
+ */
+router.get('/saved-events/:eventId/check', userController.isEventSaved);
 
 /**
  * @swagger
@@ -165,5 +358,9 @@ router.delete('/:id', authorize('admin'), userController.deleteUser);
  */
 router.post('/add-user', authorize('admin'), validateBody(registerSchema), userController.createUser);
 
+// Routes avec paramètres (doivent être définies en dernier)
+router.get('/:id', userController.getUserById);
+router.put('/:id', userController.updateUser);
+router.delete('/:id', authorize('admin'), userController.deleteUser);
 
 export default router;
