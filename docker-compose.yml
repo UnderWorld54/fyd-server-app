@@ -28,7 +28,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
       MONGO_INITDB_DATABASE: fyd
-    volumes:
+    volumes: 
       - mongodb_data:/data/db
     networks:
       - app-network

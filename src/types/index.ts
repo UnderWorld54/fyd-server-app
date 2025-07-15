@@ -11,6 +11,14 @@ export interface IUser {
   isActive?: boolean;
   refreshToken?: string | null;
   interests?: string[];
+  savedEvents?: Array<{
+    eventId: string;
+    name: string;
+    date: string;
+    location: string;
+    imageUrl?: string;
+    savedAt?: Date;
+  }>;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -49,6 +57,14 @@ export interface RegisterRequest {
   age?: number;
   city: string;
   interests: string[];
+}
+
+export interface SaveEventRequest {
+  eventId: string;
+  name: string;
+  date: string;
+  location: string;
+  imageUrl?: string;
 }
 
 export interface JwtPayload {

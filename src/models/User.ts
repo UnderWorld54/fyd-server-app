@@ -49,7 +49,30 @@ const UserSchema: Schema = new Schema(
     interests: {
       type: [String],
       default: []
-    }
+    },
+    savedEvents: [{
+      eventId: {
+        type: String,
+        required: true
+      },
+      name: {
+        type: String,
+        required: true
+      },
+      date: {
+        type: String,
+        required: true
+      },
+      location: {
+        type: String,
+        required: true
+      },
+      imageUrl: String,
+      savedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }]
   },
   {
     timestamps: true
