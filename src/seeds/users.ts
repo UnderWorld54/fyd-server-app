@@ -38,33 +38,46 @@ const users = [
   }
 ];
 
-const seedUsers = async () => {
+export const seedUsers = async () => {
   try {
-    // Connexion à MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fyd');
-    console.log('Connected to MongoDB');
-
-    // Suppression des utilisateurs existants
-    await User.deleteMany({});
-    console.log('Cleared existing users');
-
     // Hash des mots de passe
     for (const user of users) {
       user.password = await bcrypt.hash(user.password, 12);
     }
 
+    // Suppression des utilisateurs existants
+    await User.deleteMany({});
+    console.log('Cleared existing users');
+
     // Création des nouveaux utilisateurs
     const insertedUsers = await User.insertMany(users);
     console.log('Users seeded successfully');
-
-    // Déconnexion de MongoDB
-    await mongoose.disconnect();
-    console.log('Disconnected from MongoDB');
+    
+    return insertedUsers;
   } catch (error) {
     console.error('Error seeding users:', error);
-    process.exit(1);
+    throw error;
   }
 };
 
-// Exécution du seed
-seedUsers(); 
+// Exécution du seed seulement si le fichier est exécuté directement
+if (require.main === module) {
+  // Connexion à MongoDB
+  mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fyd')
+    .then(() => {
+      console.log('Connected to MongoDB');
+      return seedUsers();
+    })
+    .then(() => {
+      console.log('Seeding completed');
+      return mongoose.disconnect();
+    })
+    .then(() => {
+      console.log('Disconnected from MongoDB');
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      process.exit(1);
+    });
+} 

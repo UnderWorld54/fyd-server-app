@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: fyd-api
+    env: docker
+    region: oregon  # ou la région de ton choix
+    plan: free
+    buildCommand: ""  # Docker détecte automatiquement le Dockerfile
+    startCommand: ""  # Utilise l'ENTRYPOINT du Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: SEED_DATABASE
+        value: false  # Initialisation intelligente
+      - key: BCRYPT_SALT_ROUNDS
+        value: 12
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Ces variables doivent être définies manuellement dans Render :
+      # - MONGODB_URI
+      # - JWT_SECRET
+    healthCheckPath: /health
+    autoDeploy: true 
